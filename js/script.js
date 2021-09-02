@@ -103,5 +103,142 @@ paymentMethod.addEventListener('change', (e) => {
 
 //Step 8
 
+//Helper function for validating name field.
+const nameElement = document.getElementById('name');
+function nameValidator () {
+    const nameInput = nameElement.value;
+    const nameIsValid = /^[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*?$/.test(nameInput);
+    return nameIsValid;
+}
+
+//Helper function for validating email field.
+const emailElement = document.getElementById('email');
+function emailValidator () {
+    const emailInput = emailElement.value;
+    const emailIsValid = /^[^@]+@[^@.]+\.com$/i.test(emailInput);
+    return emailIsValid;
+}
+
+//Helper function for validating number of activities
+let numOfActivities = 0;
+activities.addEventListener('change', (e) => {
+    if (e.target.checked) {
+        numOfActivities++;
+    } else {
+        numOfActivities--;
+    }
+});
+
+function activitiesValidator () {
+    const numOfActivitiesIsValid = numOfActivities > 0;
+    return numOfActivitiesIsValid;
+}
+
+//Helper functions for validating credit card information.
+const ccNumberElement = document.getElementById('cc-num');
+const ccZipElement = document.getElementById('zip');
+const ccCVVElement = document.getElementById('cvv');
+
+function ccNumValidator () {
+    const numberInput = ccNumberElement.value;
+    const numberIsValid = /^\d{13,16}$/.test(numberInput);    
+    return numberIsValid;
+}
+
+function zipValidator () {
+    const zipInput = ccZipElement.value;
+    const zipIsValid = /^\d{5}$/.test(zipInput);
+    return zipIsValid;
+}
+
+function cvvValidator () {
+    const cvvInput = ccCVVElement.value;
+    const cvvIsValid = /^\d{3}$/.test(cvvInput);
+    return cvvIsValid;
+}
+
+//Submit handler
+
+const form = document.querySelector('form');
+form.addEventListener('submit', (e) => {
+    if (!nameValidator()){
+        e.preventDefault();
+        nameElement.parentElement.classList.add('not-valid');
+        nameElement.parentElement.classList.remove('valid');
+        nameElement.parentElement.lastElementChild.classList.remove('hint');
+    } else {
+        nameElement.parentElement.classList.add('valid');
+        nameElement.parentElement.classList.remove('not-valid');
+        nameElement.parentElement.lastElementChild.classList.add('hint');
+    }
+    if (!emailValidator()){
+        e.preventDefault();
+        emailElement.parentElement.classList.add('not-valid');
+        emailElement.parentElement.classList.remove('valid');
+        emailElement.parentElement.lastElementChild.classList.remove('hint');
+    } else {
+        emailElement.parentElement.classList.add('valid');
+        emailElement.parentElement.classList.remove('not-valid');
+        emailElement.parentElement.lastElementChild.classList.add('hint');
+    }
+    if (!activitiesValidator()){
+        e.preventDefault();
+        activities.classList.add('not-valid');
+        activities.classList.remove('valid');
+        activities.lastElementChild.classList.remove('hint');
+    } else {
+        activities.classList.add('valid');
+        activities.classList.remove('not-valid');
+        activities.lastElementChild.classList.add('hint');
+    }
+    if (creditCardInfo.style.display === '') {
+        if (!ccNumValidator()) {
+            e.preventDefault();
+            ccNumberElement.parentElement.classList.add('not-valid');
+            ccNumberElement.parentElement.classList.remove('valid');
+            ccNumberElement.parentElement.lastElementChild.classList.remove('hint');
+        } else {
+            ccNumberElement.parentElement.classList.add('valid');
+            ccNumberElement.parentElement.classList.remove('not-valid');
+            ccNumberElement.parentElement.lastElementChild.classList.add('hint');
+        }
+        if (!zipValidator()) {
+            e.preventDefault();
+            ccZipElement.parentElement.classList.add('not-valid');
+            ccZipElement.parentElement.classList.remove('valid');
+            ccZipElement.parentElement.lastElementChild.classList.remove('hint');
+        } else {
+            ccZipElement.parentElement.classList.add('valid');
+            ccZipElement.parentElement.classList.remove('not-valid');
+            ccZipElement.parentElement.lastElementChild.classList.add('hint');
+        }
+        if (!cvvValidator()) {
+            e.preventDefault();
+            ccCVVElement.parentElement.classList.add('not-valid');
+            ccCVVElement.parentElement.classList.remove('valid');
+            ccCVVElement.parentElement.lastElementChild.classList.remove('hint');
+        } else {
+            ccCVVElement.parentElement.classList.add('valid');
+            ccCVVElement.parentElement.classList.remove('not-valid');
+            ccCVVElement.parentElement.lastElementChild.classList.add('hint');
+        }
+    }
+});
+
+//Step 9
+const activityBoxes = document.querySelectorAll('[type = "checkbox"]');
+
+for (i =0; i < activityBoxes.length; i++){
+    let focusedActivity = activityBoxes[i];
+    focusedActivity.addEventListener('focus', () => {
+        focusedActivity.parentElement.className = 'focus';
+    });
+    focusedActivity.addEventListener('blur', () => {
+        focusedActivity.parentElement.className = '';
+    });
+}
+
+
+
 
 
