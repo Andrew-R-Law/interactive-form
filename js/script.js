@@ -1,6 +1,6 @@
 
 
-//Sets name field's focus property to 'true' when page is first loaded.
+//Focuses the name field's text area when page is first loaded.
 const nameText = document.getElementById('name');
 nameText.focus();
 
@@ -33,13 +33,14 @@ const jsPunOptions = document.querySelectorAll('[data-theme = "js puns"]');
 const jsHeartOptions = document.querySelectorAll('[data-theme = "heart js"]');
 
 
-//Listens for a change on the design selector field. When user selects design, color selector becomes available.
+//Listens for a change on the design selector field. When user selects design, color selector becomes available and hidden option text changes to 'Choose a color'.
 //When user changes design on design selector, all options are unselected.
 //If 'js puns' design is selected, relevant colors are displayed (and others hidden) as options.
 //If 'heart js' design is selected, relevant colors are displayed (and others hidden) as options.
 
 designSelector.addEventListener('change', (e) => {
     colorSelector.disabled = false;
+    colorSelector.firstElementChild.innerText = 'Choose a color';
     for(i = 0; i < colorSelector.options.length; i++){
         colorSelector.options[i].selected = false;
     }
@@ -69,7 +70,6 @@ activities.addEventListener('change', (e) => {
     totalDisplay.innerText = `Total: $${totalCost}`;
 });
 
-//Step 7
 
 //Sets credit card option as selected when first loaded
 const creditCardOption = document.querySelector('[value = "credit-card"]');
@@ -101,7 +101,21 @@ paymentMethod.addEventListener('change', (e) => {
     }
 });
 
-//Step 8
+//For accessibility: loops over the checkboxes in 'Activities' and listens for two events. If the checkbox is focused,
+//it's parent element receives classname of 'focus'; if it is blurred, the parentElement has no class name.
+const activityBoxes = document.querySelectorAll('[type = "checkbox"]');
+
+for (i =0; i < activityBoxes.length; i++){
+    let focusedActivity = activityBoxes[i];
+    focusedActivity.addEventListener('focus', () => {
+        focusedActivity.parentElement.className = 'focus';
+    });
+    focusedActivity.addEventListener('blur', () => {
+        focusedActivity.parentElement.className = '';
+    });
+}
+
+/********Validation functions incoming *******/
 
 //Helper function for validating name field.
 const nameElement = document.getElementById('name');
@@ -119,18 +133,10 @@ function emailValidator () {
     return emailIsValid;
 }
 
-//Helper function for validating number of activities
-let numOfActivities = 0;
-activities.addEventListener('change', (e) => {
-    if (e.target.checked) {
-        numOfActivities++;
-    } else {
-        numOfActivities--;
-    }
-});
+//Helper function for validating number of activities is greater than 0.
 
 function activitiesValidator () {
-    const numOfActivitiesIsValid = numOfActivities > 0;
+    const numOfActivitiesIsValid = totalCost > 0;
     return numOfActivitiesIsValid;
 }
 
@@ -157,86 +163,39 @@ function cvvValidator () {
     return cvvIsValid;
 }
 
-//Submit handler
+/*Master validator function that accepts a validator function, an element, and an event as parameters.
+If the passed-in function returns false, the default behavior on the event is prevented,
+the parent element receives the class 'not-valid', and loses the class 'valid', and the
+last parent element's last child--the hidden hint--loses the class 'hint'.
+*/
+
+function masterValidator (validator, element, event) {
+    if (!validator()) {
+        event.preventDefault();
+        element.parentElement.classList.add('not-valid');
+        element.parentElement.classList.remove('valid');
+        element.parentElement.lastElementChild.classList.remove('hint');
+    } else {
+        element.parentElement.classList.add('valid');
+        element.parentElement.classList.remove('not-valid');
+        element.parentElement.lastElementChild.classList.add('hint');
+    }
+}
+
+//Submit handler that calls the masterValidator, passing in the all of the helper functions above with the relevant element.
 
 const form = document.querySelector('form');
 form.addEventListener('submit', (e) => {
-    if (!nameValidator()){
-        e.preventDefault();
-        nameElement.parentElement.classList.add('not-valid');
-        nameElement.parentElement.classList.remove('valid');
-        nameElement.parentElement.lastElementChild.classList.remove('hint');
-    } else {
-        nameElement.parentElement.classList.add('valid');
-        nameElement.parentElement.classList.remove('not-valid');
-        nameElement.parentElement.lastElementChild.classList.add('hint');
-    }
-    if (!emailValidator()){
-        e.preventDefault();
-        emailElement.parentElement.classList.add('not-valid');
-        emailElement.parentElement.classList.remove('valid');
-        emailElement.parentElement.lastElementChild.classList.remove('hint');
-    } else {
-        emailElement.parentElement.classList.add('valid');
-        emailElement.parentElement.classList.remove('not-valid');
-        emailElement.parentElement.lastElementChild.classList.add('hint');
-    }
-    if (!activitiesValidator()){
-        e.preventDefault();
-        activities.classList.add('not-valid');
-        activities.classList.remove('valid');
-        activities.lastElementChild.classList.remove('hint');
-    } else {
-        activities.classList.add('valid');
-        activities.classList.remove('not-valid');
-        activities.lastElementChild.classList.add('hint');
-    }
-    if (creditCardInfo.style.display === '') {
-        if (!ccNumValidator()) {
-            e.preventDefault();
-            ccNumberElement.parentElement.classList.add('not-valid');
-            ccNumberElement.parentElement.classList.remove('valid');
-            ccNumberElement.parentElement.lastElementChild.classList.remove('hint');
-        } else {
-            ccNumberElement.parentElement.classList.add('valid');
-            ccNumberElement.parentElement.classList.remove('not-valid');
-            ccNumberElement.parentElement.lastElementChild.classList.add('hint');
-        }
-        if (!zipValidator()) {
-            e.preventDefault();
-            ccZipElement.parentElement.classList.add('not-valid');
-            ccZipElement.parentElement.classList.remove('valid');
-            ccZipElement.parentElement.lastElementChild.classList.remove('hint');
-        } else {
-            ccZipElement.parentElement.classList.add('valid');
-            ccZipElement.parentElement.classList.remove('not-valid');
-            ccZipElement.parentElement.lastElementChild.classList.add('hint');
-        }
-        if (!cvvValidator()) {
-            e.preventDefault();
-            ccCVVElement.parentElement.classList.add('not-valid');
-            ccCVVElement.parentElement.classList.remove('valid');
-            ccCVVElement.parentElement.lastElementChild.classList.remove('hint');
-        } else {
-            ccCVVElement.parentElement.classList.add('valid');
-            ccCVVElement.parentElement.classList.remove('not-valid');
-            ccCVVElement.parentElement.lastElementChild.classList.add('hint');
-        }
-    }
+    masterValidator(nameValidator, nameElement, e);
+    masterValidator(emailValidator, emailElement, e);
+    masterValidator(activitiesValidator, activities.firstElementChild, e);
+    masterValidator(ccNumValidator, ccNumberElement, e);
+    masterValidator(zipValidator, ccZipElement, e);
+    masterValidator(cvvValidator, ccCVVElement, e);
 });
 
-//Step 9
-const activityBoxes = document.querySelectorAll('[type = "checkbox"]');
 
-for (i =0; i < activityBoxes.length; i++){
-    let focusedActivity = activityBoxes[i];
-    focusedActivity.addEventListener('focus', () => {
-        focusedActivity.parentElement.className = 'focus';
-    });
-    focusedActivity.addEventListener('blur', () => {
-        focusedActivity.parentElement.className = '';
-    });
-}
+
 
 
 
