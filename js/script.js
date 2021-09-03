@@ -1,12 +1,18 @@
 
 
 //Focuses the name field's text area when page is first loaded.
-const nameText = document.getElementById('name');
-nameText.focus();
+function focusName () {
+    const nameText = document.getElementById('name');
+    nameText.focus();
+}
+focusName();
 
 //Hides 'Other Job Role' text area when page is first loaded.
-const otherJobText = document.getElementById('other-job-role');
-otherJobText.style.display = 'none';
+function hideOtherJob () {
+    const otherJobText = document.getElementById('other-job-role');
+    otherJobText.style.display = 'none';
+}
+hideOtherJob();
 
 //Listens for a change on the 'select job role' field.
 //If user selects 'other', the 'Other Job Role' text area appears.
@@ -15,6 +21,7 @@ otherJobText.style.display = 'none';
 const jobTitle = document.getElementById('title');
 
 jobTitle.addEventListener('change', (e) => {
+    const otherJobText = document.getElementById('other-job-role');
     if (e.target.value === 'other') {
         otherJobText.style.display = '';
     } else {
@@ -23,14 +30,12 @@ jobTitle.addEventListener('change', (e) => {
 });
 
 //Sets the selector button for t-shirt color to disabled when page is loaded.
-
 const colorSelector = document.getElementById('color');
 colorSelector.disabled = true;
 
 //Assigns constants to the design selector field as well as the color options available for 'js puns' and 'heart js', respectively.
 const designSelector = document.getElementById('design');
-const jsPunOptions = document.querySelectorAll('[data-theme = "js puns"]');
-const jsHeartOptions = document.querySelectorAll('[data-theme = "heart js"]');
+
 
 
 //Listens for a change on the design selector field. When user selects design, color selector becomes available and hidden option text changes to 'Choose a color'.
@@ -39,6 +44,8 @@ const jsHeartOptions = document.querySelectorAll('[data-theme = "heart js"]');
 //If 'heart js' design is selected, relevant colors are displayed (and others hidden) as options.
 
 designSelector.addEventListener('change', (e) => {
+    const jsPunOptions = document.querySelectorAll('[data-theme = "js puns"]');
+    const jsHeartOptions = document.querySelectorAll('[data-theme = "heart js"]');
     colorSelector.disabled = false;
     for(i = 0; i < colorSelector.options.length; i++){
         colorSelector.options[i].selected = false;
@@ -73,34 +80,41 @@ activities.addEventListener('change', (e) => {
 
 
 //Sets credit card option as selected when first loaded
-const creditCardOption = document.querySelector('[value = "credit-card"]');
-creditCardOption.selected = true;
+function displayCC () {
+    const creditCardOption = document.querySelector('[value = "credit-card"]');
+    creditCardOption.selected = true;
+}
+displayCC();
+
+
 
 
 //Hides paypal and bitcoin information when first loaded.
-const creditCardInfo = document.getElementById('credit-card');
-const paypalInfo = document.getElementById('paypal');
-const bitcoinInfo = document.getElementById('bitcoin');
-
-paypalInfo.style.display = 'none';
-bitcoinInfo.style.display = 'none';
-
 //When a user makes a change to payment method, credit card, paypal, and bitcoin information are all hidden
 //Then, the selected information becomes available.
 
 const paymentMethod = document.getElementById('payment');
-paymentMethod.addEventListener('change', (e) => {
-    creditCardInfo.style.display = 'none';
+
+function payMethodDisplay () {
+    const creditCardInfo = document.getElementById('credit-card');
+    const paypalInfo = document.getElementById('paypal');
+    const bitcoinInfo = document.getElementById('bitcoin');
     paypalInfo.style.display = 'none';
     bitcoinInfo.style.display = 'none';
-    if (e.target.value === 'credit-card') {
-        creditCardInfo.style.display = '';
-    } else if (e.target.value === 'paypal') {
-        paypalInfo.style.display = '';
-    } else {
-        bitcoinInfo.style.display = '';
-    }
-});
+    paymentMethod.addEventListener('change', (e) => {
+        creditCardInfo.style.display = 'none';
+        paypalInfo.style.display = 'none';
+        bitcoinInfo.style.display = 'none';
+        if (e.target.value === 'credit-card') {
+            creditCardInfo.style.display = '';
+        } else if (e.target.value === 'paypal') {
+            paypalInfo.style.display = '';
+        } else {
+            bitcoinInfo.style.display = '';
+        }
+    });
+}
+payMethodDisplay();
 
 //For accessibility: loops over the checkboxes in 'Activities' and listens for two events. If the checkbox is focused,
 //it's parent element receives classname of 'focus'; if it is blurred, the parentElement has no class name.
@@ -142,6 +156,7 @@ function activitiesValidator () {
 }
 
 //Helper functions for validating credit card information.
+
 const ccNumberElement = document.getElementById('cc-num');
 const ccZipElement = document.getElementById('zip');
 const ccCVVElement = document.getElementById('cvv');
@@ -190,6 +205,7 @@ form.addEventListener('submit', (e) => {
     masterValidator(nameValidator, nameElement, e);
     masterValidator(emailValidator, emailElement, e);
     masterValidator(activitiesValidator, activities.firstElementChild, e);
+    const creditCardInfo = document.getElementById('credit-card');
     if (creditCardInfo.style.display === '') {
         masterValidator(ccNumValidator, ccNumberElement, e);
         masterValidator(zipValidator, ccZipElement, e);
