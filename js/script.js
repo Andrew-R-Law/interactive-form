@@ -40,16 +40,17 @@ const jsHeartOptions = document.querySelectorAll('[data-theme = "heart js"]');
 
 designSelector.addEventListener('change', (e) => {
     colorSelector.disabled = false;
-    colorSelector.firstElementChild.innerText = 'Choose a color';
     for(i = 0; i < colorSelector.options.length; i++){
         colorSelector.options[i].selected = false;
-    }
-    if (e.target.value === 'js puns') {
-        jsPunOptions.forEach(option => option.style.display = '');
-        jsHeartOptions.forEach(option => option.style.display = 'none');
-    } else if (e.target.value === 'heart js'){
-        jsPunOptions.forEach(option => option.style.display = 'none');
-        jsHeartOptions.forEach(option => option.style.display = '');
+        if (e.target.value === 'js puns') {
+            jsPunOptions.forEach(option => option.selected = true);
+            jsPunOptions.forEach(option => option.style.display = '');
+            jsHeartOptions.forEach(option => option.style.display = 'none');
+        } else if (e.target.value === 'heart js'){
+            jsHeartOptions.forEach(option => option.selected = true);
+            jsPunOptions.forEach(option => option.style.display = 'none');
+            jsHeartOptions.forEach(option => option.style.display = '');
+        }
     }
 });
 
@@ -189,9 +190,11 @@ form.addEventListener('submit', (e) => {
     masterValidator(nameValidator, nameElement, e);
     masterValidator(emailValidator, emailElement, e);
     masterValidator(activitiesValidator, activities.firstElementChild, e);
-    masterValidator(ccNumValidator, ccNumberElement, e);
-    masterValidator(zipValidator, ccZipElement, e);
-    masterValidator(cvvValidator, ccCVVElement, e);
+    if (creditCardInfo.style.display === '') {
+        masterValidator(ccNumValidator, ccNumberElement, e);
+        masterValidator(zipValidator, ccZipElement, e);
+        masterValidator(cvvValidator, ccCVVElement, e);
+    }
 });
 
 
