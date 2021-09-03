@@ -1,4 +1,16 @@
-
+const jobTitle = document.getElementById('title');
+const colorSelector = document.getElementById('color');
+const designSelector = document.getElementById('design');
+const activities = document.getElementById('activities');
+let totalCost = 0;
+const activityBoxes = document.querySelectorAll('[type = "checkbox"]');
+const paymentMethod = document.getElementById('payment');
+const nameElement = document.getElementById('name');
+const emailElement = document.getElementById('email');
+const ccNumberElement = document.getElementById('cc-num');
+const ccZipElement = document.getElementById('zip');
+const ccCVVElement = document.getElementById('cvv');
+const form = document.querySelector('form');
 
 //Focuses the name field's text area when page is first loaded.
 function focusName () {
@@ -18,7 +30,6 @@ hideOtherJob();
 //If user selects 'other', the 'Other Job Role' text area appears.
 //If user selects anything else, 'Other Job Role' text area stays/becomes hidden.
 
-const jobTitle = document.getElementById('title');
 
 jobTitle.addEventListener('change', (e) => {
     const otherJobText = document.getElementById('other-job-role');
@@ -30,13 +41,8 @@ jobTitle.addEventListener('change', (e) => {
 });
 
 //Sets the selector button for t-shirt color to disabled when page is loaded.
-const colorSelector = document.getElementById('color');
+
 colorSelector.disabled = true;
-
-//Assigns constants to the design selector field as well as the color options available for 'js puns' and 'heart js', respectively.
-const designSelector = document.getElementById('design');
-
-
 
 //Listens for a change on the design selector field. When user selects design, color selector becomes available and hidden option text changes to 'Choose a color'.
 //When user changes design on design selector, all options are unselected.
@@ -66,8 +72,7 @@ designSelector.addEventListener('change', (e) => {
 //If a box is unchecked, the data-cost for that box is subtracted to the variable 'totalCost.'
 //The inner text for the total cost element is updated to reflect the totalCost variable.
 
-const activities = document.getElementById('activities');
-let totalCost = 0;
+
 activities.addEventListener('change', (e) => {
     const totalDisplay = document.getElementById('activities-cost');
     if (e.target.checked) {
@@ -93,7 +98,6 @@ displayCC();
 //When a user makes a change to payment method, credit card, paypal, and bitcoin information are all hidden
 //Then, the selected information becomes available.
 
-const paymentMethod = document.getElementById('payment');
 
 function payMethodDisplay () {
     const creditCardInfo = document.getElementById('credit-card');
@@ -118,7 +122,7 @@ payMethodDisplay();
 
 //For accessibility: loops over the checkboxes in 'Activities' and listens for two events. If the checkbox is focused,
 //it's parent element receives classname of 'focus'; if it is blurred, the parentElement has no class name.
-const activityBoxes = document.querySelectorAll('[type = "checkbox"]');
+
 
 for (i =0; i < activityBoxes.length; i++){
     let focusedActivity = activityBoxes[i];
@@ -133,7 +137,7 @@ for (i =0; i < activityBoxes.length; i++){
 /********Validation functions incoming *******/
 
 //Helper function for validating name field.
-const nameElement = document.getElementById('name');
+
 function nameValidator () {
     const nameInput = nameElement.value;
     const nameIsValid = /^[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*?$/.test(nameInput);
@@ -141,7 +145,7 @@ function nameValidator () {
 }
 
 //Helper function for validating email field.
-const emailElement = document.getElementById('email');
+
 function emailValidator () {
     const emailInput = emailElement.value;
     const emailIsValid = /^[^@]+@[^@.]+\.com$/i.test(emailInput);
@@ -156,10 +160,6 @@ function activitiesValidator () {
 }
 
 //Helper functions for validating credit card information.
-
-const ccNumberElement = document.getElementById('cc-num');
-const ccZipElement = document.getElementById('zip');
-const ccCVVElement = document.getElementById('cvv');
 
 function ccNumValidator () {
     const numberInput = ccNumberElement.value;
@@ -200,7 +200,7 @@ function masterValidator (validator, element, event) {
 
 //Submit handler that calls the masterValidator, passing in the all of the helper functions above with the relevant element.
 
-const form = document.querySelector('form');
+
 form.addEventListener('submit', (e) => {
     masterValidator(nameValidator, nameElement, e);
     masterValidator(emailValidator, emailElement, e);
